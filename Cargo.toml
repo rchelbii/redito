@@ -1,0 +1,9 @@
+[package]
+name = "edito"
+version = "0.1.0"
+edition = "2021"
+author = ["Riadh Chelbi <rchelbii@gmail.com>"]
+
+[dependencies]
+termion = "1"
+
