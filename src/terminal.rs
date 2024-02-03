@@ -39,7 +39,7 @@ impl Terminal {
         print!("{}", termion::clear::CurrentLine);            
     }
 
-    #![allow(clippy::cast_possible_trancation)]
+    #[allow(clippy::cast_possible_trancation)]
     pub fn cursor_position(position: &Position) {
         let Position { mut x, mut y } = position;
         x = x.saturating_add(1);
