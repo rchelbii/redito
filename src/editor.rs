@@ -1,4 +1,5 @@
 use termion::event::Key;
+use std::env;
 
 use crate::Terminal;
 use crate::Document;
@@ -48,10 +49,17 @@ impl Editor {
     }
 
     pub fn default() -> Self {
+        let args: Vec<String> = env::args().collect();
+        let document = if args.len() > 1 {
+            let file_name = &args[1];
+            Document::open(&file_name).unwrap_or_default()
+        } else {
+            Document::default()
+        };
         Self { 
             should_quit : false,
             terminal : Terminal::default().expect("ERROR: Failed to initialize terminal"),
-            document: Document::open(),
+            document,
             cursor_position: Position { x: 0, y: 0 },
         }
     }
