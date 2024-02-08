@@ -6,4 +6,4 @@ author = ["Riadh Chelbi <rchelbii@gmail.com>"]
 
 [dependencies]
 termion = "1"
-
+unicode-segmentation = "1"
