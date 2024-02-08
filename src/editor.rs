@@ -1,9 +1,9 @@
-use termion::event::Key;
 use std::env;
+use termion::event::Key;
 
-use crate::Terminal;
 use crate::Document;
 use crate::Row;
+use crate::Terminal;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -35,10 +35,10 @@ impl Editor {
             }
         }
     }
-    
+
     fn refresh_screen(&self) -> Result<(), std::io::Error> {
         Terminal::cursor_hide();
-        Terminal::cursor_position(&Position { x: 0, y: 0});
+        Terminal::cursor_position(&Position { x: 0, y: 0 });
         if self.should_quit {
             Terminal::clear_screen();
             println!("GOODBYE! \r");
@@ -61,9 +61,9 @@ impl Editor {
         } else {
             Document::default()
         };
-        Self { 
-            should_quit : false,
-            terminal : Terminal::default().expect("ERROR: Failed to initialize terminal"),
+        Self {
+            should_quit: false,
+            terminal: Terminal::default().expect("ERROR: Failed to initialize terminal"),
             document,
             cursor_position: Position { x: 0, y: 0 },
             offset: Position::default(),
@@ -74,10 +74,7 @@ impl Editor {
         let pressed_key = Terminal::read_key()?;
         match pressed_key {
             Key::Ctrl('q') => self.should_quit = true,
-            Key::Up 
-            | Key::Down 
-            | Key::Right 
-            | Key::Left => self.move_cursor(pressed_key),
+            Key::Up | Key::Down | Key::Right | Key::Left => self.move_cursor(pressed_key),
             _ => (),
         }
         self.scroll();
@@ -99,7 +96,7 @@ impl Editor {
                 if y < height {
                     y = y.saturating_add(1);
                 }
-            },
+            }
             Key::Left => {
                 if x > 0 {
                     x -= 1;
@@ -111,12 +108,15 @@ impl Editor {
                         x = 0;
                     }
                 }
-            },
+            }
             Key::Right => {
                 if x < width {
-                    x = x.saturating_add(1);
+                    x += 1;
+                } else if y < height {
+                    y += 1;
+                    x = 0;
                 }
-            },
+            }
             _ => (),
         }
         width = if let Some(row) = self.document.row(y) {
@@ -137,9 +137,9 @@ impl Editor {
         let row = row.render(start, end);
         println!("{}\r", row);
     }
-    
+
     fn draw_rows(&self) {
-        let height = self.terminal.size().height; 
+        let height = self.terminal.size().height;
         for terminal_row in 0..height - 1 {
             Terminal::clear_current_line();
             if let Some(row) = self.document.row(terminal_row as usize + self.offset.y) {
@@ -185,4 +185,3 @@ fn die(e: std::io::Error) {
     print!("{}", termion::clear::All);
     panic!("{}", e);
 }
-
