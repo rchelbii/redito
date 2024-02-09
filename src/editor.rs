@@ -153,7 +153,7 @@ impl Editor {
     }
 
     fn draw_welcome_message(&self) {
-        let mut welcome_message = format!("Edito -- the editor {}", VERSION);
+        let mut welcome_message = format!("redito -- the editor {}", VERSION);
         let width = self.terminal.size().width as usize;
         let len = welcome_message.len();
         let padding = width.saturating_sub(len) / 2;
