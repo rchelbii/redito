@@ -235,7 +235,7 @@ impl Editor {
             } else if self.document.is_empty() && terminal_row == height / 3 {
                 self.draw_welcome_message();
             } else {
-                println!(".\r");
+                println!("»\r");
             }
         }
     }
