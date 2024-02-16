@@ -82,7 +82,7 @@ impl Row {
     }
 
     pub fn split(&mut self, at: usize) -> Self {
-        let mut beginning: String = self.string[..]
+        let beginning: String = self.string[..]
             .graphemes(true)
             .take(at)
             .collect();

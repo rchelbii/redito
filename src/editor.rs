@@ -172,7 +172,6 @@ impl Editor {
 
     fn move_cursor(&mut self, key: Key) {
         let Position { mut x, mut y } = self.cursor_position;
-        let size = self.terminal.size();
         let height = self.document.len();
         let mut width = if let Some(row) = self.document.row(y) {
             row.len()
@@ -292,7 +291,7 @@ impl Editor {
         let Position { x, y } = self.cursor_position;
         let height = self.terminal.size().height as usize;
         let width = self.terminal.size().width as usize;
-        let mut offset = &mut self.offset;
+        let offset = &mut self.offset;
         if y < offset.y {
             offset.y = y;
         } else if y >= offset.y.saturating_add(height) {
