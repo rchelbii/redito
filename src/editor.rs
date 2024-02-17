@@ -61,7 +61,6 @@ impl Editor {
         Terminal::cursor_position(&Position { x: 0, y: 0 });
         if self.should_quit {
             Terminal::clear_screen();
-            println!("GOODBYE! \r");
         } else {
             self.draw_rows();
             self.draw_status_bar();
@@ -77,14 +76,14 @@ impl Editor {
 
     pub fn default() -> Self {
         let args: Vec<String> = env::args().collect();
-        let mut initial_status = String::from("Help: Ctrl-S -- Save | Ctrl-Q -- Quit"); 
+        let mut initial_status = String::from("HELP: CTRL-S » SAVE | CTRL-Q » Quit"); 
         let document = if args.len() > 1 {
             let file_name = &args[1];
             let doc = Document::open(&file_name);
             if doc.is_ok() {
                 doc.unwrap()
             } else {
-                initial_status = format!("Error: Could not open file: {}", file_name);
+                initial_status = format!("ERROR: COULD NOT OPEN FILE » {}", file_name);
                 Document::default()
             }
         } else {
@@ -92,7 +91,7 @@ impl Editor {
         };
         Self {
             should_quit: false,
-            terminal: Terminal::default().expect("ERROR: Failed to initialize terminal"),
+            terminal: Terminal::default().expect("ERROR: FAILED TO INITIALIZE TERMINAL"),
             document,
             cursor_position: Position { x: 0, y: 0 },
             offset: Position::default(),
@@ -125,17 +124,17 @@ impl Editor {
 
     fn save(&mut self) {
         if self.document.file_name.is_none() {
-            let new_name = self.prompt("Save As: ").unwrap_or(None);
+            let new_name = self.prompt("SAVE AS » ").unwrap_or(None);
             if new_name.is_none() {
-                self.status_message = StatusMessage::from("Save Aborted".to_string());
+                self.status_message = StatusMessage::from("SAVE ABORTED".to_string());
                 return;
             }
             self.document.file_name = new_name;
         }
         if self.document.save().is_ok() {
-            self.status_message = StatusMessage::from("File saved successfully ;".to_string());
+            self.status_message = StatusMessage::from("FILE SAVED SUCCESSFULLY".to_string());
         } else {
-            self.status_message = StatusMessage::from("Error while saving to file".to_string());
+            self.status_message = StatusMessage::from("ERROR WHILE SAVING TO FILE".to_string());
         }
     }
 
@@ -241,12 +240,12 @@ impl Editor {
     }
 
     fn draw_welcome_message(&self) {
-        let mut welcome_message = format!("redito -- the editor {}", VERSION);
+        let mut welcome_message = format!("« REDITO ¨¨ THE EDITOR {} »", VERSION);
         let width = self.terminal.size().width as usize;
         let len = welcome_message.len();
         let padding = width.saturating_sub(len) / 2;
         let spaces = " ".repeat(padding.saturating_sub(1));
-        welcome_message = format!(".{}{}", spaces, welcome_message);
+        welcome_message = format!("»{}{}", spaces, welcome_message);
         welcome_message.truncate(width);
         println!("{}\r", welcome_message);
     }
@@ -254,12 +253,12 @@ impl Editor {
     fn draw_status_bar(&self) {
         let mut status;
         let width = self.terminal.size().width as usize;
-        let mut file_name = "[No Name]".to_string();
+        let mut file_name = "[NO NAME]".to_string();
         if let Some(name) = &self.document.file_name {
             file_name = name.clone();
             file_name.truncate(20);
         }
-        status = format!("{} - {} lines", file_name, self.document.len());
+        status = format!("{} - {} LIGNES", file_name, self.document.len());
         let line_indicator = format!(
             "{}/{}",
             self.cursor_position.y.saturating_add(1),
