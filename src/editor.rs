@@ -258,7 +258,12 @@ impl Editor {
             file_name = name.clone();
             file_name.truncate(20);
         }
-        status = format!("{} - {} LIGNES", file_name, self.document.len());
+        let modified_indicator = if self.document.is_dirty() {
+            "| MODIFIED"
+        } else {
+            ""
+        };
+        status = format!("{} | {} LIGNES {}", file_name, self.document.len(), modified_indicator);
         let line_indicator = format!(
             "{}/{}",
             self.cursor_position.y.saturating_add(1),
