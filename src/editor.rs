@@ -1,8 +1,8 @@
 use std::env;
 use std::time::Duration;
 use std::time::Instant;
-use termion::event::Key;
 use termion::color;
+use termion::event::Key;
 
 use crate::Document;
 use crate::Row;
@@ -27,9 +27,9 @@ impl StatusMessage {
     fn from(message: String) -> Self {
         Self {
             text: message,
-            time: Instant::now()
+            time: Instant::now(),
         }
-    } 
+    }
 }
 
 pub struct Editor {
@@ -76,7 +76,7 @@ impl Editor {
 
     pub fn default() -> Self {
         let args: Vec<String> = env::args().collect();
-        let mut initial_status = String::from("HELP: CTRL-S » SAVE | CTRL-Q » Quit"); 
+        let mut initial_status = String::from("HELP: CTRL-S » SAVE | CTRL-Q » Quit");
         let document = if args.len() > 1 {
             let file_name = &args[1];
             let doc = Document::open(&file_name);
@@ -107,14 +107,15 @@ impl Editor {
             Key::Char(c) => {
                 self.document.insert(&self.cursor_position, c);
                 self.move_cursor(Key::Right);
-            },
+            }
+            // TODO: Hande the tab keypress
             Key::Delete => self.document.delete(&self.cursor_position),
             Key::Backspace => {
                 if self.cursor_position.x > 0 || self.cursor_position.y > 0 {
                     self.move_cursor(Key::Left);
                     self.document.delete(&self.cursor_position);
                 }
-            },
+            }
             Key::Up | Key::Down | Key::Right | Key::Left => self.move_cursor(pressed_key),
             _ => (),
         }
@@ -148,17 +149,17 @@ impl Editor {
                     if !result.is_empty() {
                         result.truncate(result.len() - 1);
                     }
-                },
+                }
                 Key::Char('\n') => break,
                 Key::Char(c) => {
                     if !c.is_control() {
                         result.push(c);
                     }
-                },
+                }
                 Key::Esc => {
                     result.truncate(0);
                     break;
-                },
+                }
                 _ => (),
             }
         }
@@ -263,7 +264,12 @@ impl Editor {
         } else {
             ""
         };
-        status = format!("{} | {} LIGNES {}", file_name, self.document.len(), modified_indicator);
+        status = format!(
+            "{} | {} LIGNES {}",
+            file_name,
+            self.document.len(),
+            modified_indicator
+        );
         let line_indicator = format!(
             "{}/{}",
             self.cursor_position.y.saturating_add(1),
